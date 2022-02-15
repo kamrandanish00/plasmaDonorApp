@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:plasma_donor_app2/app_styles.dart';
 
-class TextInputField extends StatelessWidget {
-  const TextInputField({
+class phoneNumberTextField extends StatelessWidget {
+  const phoneNumberTextField({
     Key? key,
     this.icon,
     required this.hint,
     this.inputAction,
     this.inputType,
     this.controller,
+    this.initialValue,
   }) : super(key: key);
 
   final IconData? icon;
@@ -17,6 +18,7 @@ class TextInputField extends StatelessWidget {
   final TextInputType? inputType;
   final TextInputAction? inputAction;
   final TextEditingController? controller;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class TextInputField extends StatelessWidget {
         ),
         child: Center(
           child: TextFormField(
+            initialValue: initialValue,
             // The validator receives the text that the user has entered.
             validator: (value) {
               if (value == null || value.isEmpty) {

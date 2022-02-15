@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:plasma_donor_app2/services/indirectPhoneCall.dart';
+// import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:plasma_donor_app2/widgets/signin_widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../app_styles.dart';
+import 'email_screen.dart';
 
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({Key? key}) : super(key: key);
@@ -15,8 +19,8 @@ class ContactUsScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text(
-              'Blood Banks',
-              style: kBodyText.copyWith(color: Colors.black),
+              'Contact us',
+              style: kBodyText.copyWith(color: Colors.white),
             ),
             centerTitle: true,
             backgroundColor: Colors.transparent,
@@ -28,7 +32,7 @@ class ContactUsScreen extends StatelessWidget {
               },
               icon: Icon(
                 Icons.arrow_back_ios_new,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
             actions: [
@@ -38,14 +42,14 @@ class ContactUsScreen extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(
                       Icons.info,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                   IconButton(
                     onPressed: () {},
                     icon: Icon(
                       Icons.menu,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                 ],
@@ -66,15 +70,41 @@ class ContactUsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(
+                      'Call: ',
+                      style: kBodyText,
+                    ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        var phoneNumber = '+923085401482';
+                        // await launch(
+                        //   'tell://$phoneNumber',
+                        // );
+                        // await FlutterPhoneDirectCaller.callNumber(phoneNumber);
+                        // await launch(phoneNumber);
+                        // _launch(phoneNumber);
+
+                        //
+                        Future<void>? _launched =
+                            IndirectPhoneCall().openUrl('tel://${phoneNumber}');
+                      },
                       icon: Icon(
                         Icons.call,
                         color: Colors.green,
                       ),
                     ),
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Text(
+                      'Email: ',
+                      style: kBodyText,
+                    ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (ctx) => EmailScreen()));
+                      },
                       icon: Icon(
                         Icons.mail_rounded,
                         color: Colors.green,
@@ -89,4 +119,8 @@ class ContactUsScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+void _launch(phoneNumber) async {
+  if (!await launch(phoneNumber)) throw 'Could not launch $phoneNumber';
 }

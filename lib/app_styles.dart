@@ -4,11 +4,11 @@ import './size_configs.dart';
 Color kPrimaryColor = Color(0xffFC9D45);
 Color kSecondaryColor = Color(0xff573353);
 
-final kTitle = TextStyle(
-  fontFamily: 'Klastik',
-  fontSize: SizeConfig.blockSizedH! * 7,
-  color: kSecondaryColor,
-);
+// final kTitle = TextStyle(
+//   fontFamily: 'Klastik',
+//   fontSize: SizeConfig.blockSizedH! * 7,
+//   color: kSecondaryColor,
+// );
 
 final kBodyText1 = TextStyle(
   color: kSecondaryColor,

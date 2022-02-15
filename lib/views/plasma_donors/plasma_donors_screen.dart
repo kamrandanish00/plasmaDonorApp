@@ -1,8 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_styles.dart';
 import '../../services/indirectPhoneCall.dart';
@@ -10,8 +7,8 @@ import '../../size_configs.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class PlasmaRequestsScreen extends StatelessWidget {
-  PlasmaRequestsScreen({Key? key, this.bloodGroup}) : super(key: key);
+class PlasmaDonorsScreen extends StatelessWidget {
+  PlasmaDonorsScreen({Key? key, this.bloodGroup}) : super(key: key);
   final String? bloodGroup;
 
   @override
@@ -23,7 +20,7 @@ class PlasmaRequestsScreen extends StatelessWidget {
       // backgroundColor: Colors.grey,
       appBar: AppBar(
         title: Text(
-          'People in need',
+          'Plasma Donors',
           style: kBodyText.copyWith(color: Colors.black),
         ),
         centerTitle: true,
@@ -55,22 +52,13 @@ class PlasmaRequestsScreen extends StatelessWidget {
           //
           SizedBox(height: 20),
           Expanded(
-            // child: ListView.separated(
-            //   itemCount: 100,
-            //   itemBuilder: (context, index) {
-            //     return PlasmaRequiredCard();
-            //   },
-            //   separatorBuilder: (BuildContext context, int index) {
-            //     return SizedBox(height: 30);
-            //   },
-            // ),
             //
             child: StreamBuilder(
               stream:
                   // FirebaseFirestore.instance.collection("Donors").snapshots(),
                   //
                   FirebaseFirestore.instance
-                      .collection('plasmaRequests')
+                      .collection('Donors')
                       .where('bloodGroup', isEqualTo: bloodGroup)
                       .snapshots(),
               builder: (_,
@@ -91,31 +79,30 @@ class PlasmaRequestsScreen extends StatelessWidget {
                             textAlign: TextAlign.center,
                           );
                         }
-                        String fullName = snapshot.data!.docs
-                            .elementAt(index)
-                            .get("fullName");
+                        String fullName =
+                            snapshot.data!.docs.elementAt(index).get("name");
                         String city =
                             snapshot.data!.docs.elementAt(index).get("city");
                         //hospital name
-                        String hospitalName = snapshot.data?.docs
+                        String hospital = snapshot.data?.docs
                             .elementAt(index)
-                            .get('hospitalName');
-                        //bloodbags required
-                        String numberOfBloodBags = snapshot.data?.docs
-                            .elementAt(index)
-                            .get('numberOfBloodBags');
+                            .get('hospital');
+
                         //phone number
                         String phoneNumber = snapshot.data?.docs
                             .elementAt(index)
                             .get('phoneNumber');
-                        //posted date
-                        String postedDate = snapshot.data?.docs
+                        DateTime dateofBirth = snapshot.data!.docs
                             .elementAt(index)
-                            .get("postedDate");
-                        // print('Posted Date ===== $postedDate');
-                        // // DateTime now = DateTime.now();
-                        // String formattedDate =
-                        //     DateFormat('yyyy-MM-dd – kk:mm').format(postedDate);
+                            .get("dateOfBirth")
+                            .toDate();
+
+                        String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
+                            .format(dateofBirth);
+
+                        //calculating age of user
+                        var ageOfDonor = calculateAge(dateofBirth);
+                        // print('This is the Age ==== $dateofBirth');
 
                         String bloodGroup = snapshot.data!.docs
                             .elementAt(index)
@@ -144,7 +131,8 @@ class PlasmaRequestsScreen extends StatelessWidget {
                                   subtitle: Text(
                                     // 'January 14, 2022',
                                     // postedDate.toString(),
-                                    postedDate,
+                                    // formattedDate,
+                                    ageOfDonor.toString() + ' years old',
                                     style: TextStyle(
                                       color: kWhite,
                                     ),
@@ -191,7 +179,7 @@ class PlasmaRequestsScreen extends StatelessWidget {
                                                   width: 250,
                                                   child: Text(
                                                     // 'Civil Hospital',
-                                                    hospitalName,
+                                                    hospital,
                                                     style: kBodyText.copyWith(
                                                         color: Colors.green),
                                                   ),
@@ -217,24 +205,24 @@ class PlasmaRequestsScreen extends StatelessWidget {
                                             ],
                                           ),
                                           //
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Icon(
-                                                Icons.format_bold_rounded,
-                                                color: Colors.red,
-                                                size: 30,
-                                              ),
-                                              SizedBox(width: 10),
-                                              Text(
-                                                // '3',
-                                                numberOfBloodBags,
-                                                style: kBodyText.copyWith(
-                                                    color: Colors.green),
-                                              ),
-                                            ],
-                                          ),
+                                          // Row(
+                                          //   mainAxisAlignment:
+                                          //       MainAxisAlignment.start,
+                                          //   children: [
+                                          //     Icon(
+                                          //       Icons.format_bold_rounded,
+                                          //       color: Colors.red,
+                                          //       size: 30,
+                                          //     ),
+                                          //     SizedBox(width: 10),
+                                          //     Text(
+                                          //       // '3',
+                                          //       numberOfBloodBags,
+                                          //       style: kBodyText.copyWith(
+                                          //           color: Colors.green),
+                                          //     ),
+                                          //   ],
+                                          // ),
                                         ],
                                       ),
                                       Container(
@@ -249,7 +237,6 @@ class PlasmaRequestsScreen extends StatelessWidget {
                                             // launch('tell://$phoneNumber');
                                             // await FlutterPhoneDirectCaller
                                             //     .callNumber(phoneNumber);
-                                            // await launch(phoneNumber);
 
                                             //indirect phone call
                                             IndirectPhoneCall().openUrl(
@@ -272,6 +259,10 @@ class PlasmaRequestsScreen extends StatelessWidget {
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(height: 30);
                       },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(snapshot.error.toString()),
                     );
                   } else {
                     return Center(
@@ -296,127 +287,23 @@ class PlasmaRequestsScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class PlasmaRequiredCard extends StatelessWidget {
-  const PlasmaRequiredCard({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          Container(
-            height: 80,
-            color: Colors.green,
-            child: ListTile(
-              leading: Icon(
-                Icons.person,
-                size: 50,
-                color: Colors.white,
-              ),
-              title: Text(
-                'Kamran Mehsood',
-                style: kBodyText.copyWith(
-                  color: Colors.white,
-                ),
-              ),
-              subtitle: Text(
-                'January 14, 2022',
-                style: TextStyle(
-                  color: kWhite,
-                ),
-              ),
-              trailing: Container(
-                alignment: Alignment.center,
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: Text('A+'),
-              ),
-            ),
-          ),
-          Container(
-            height: 150,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.house,
-                            color: Colors.green,
-                            size: 30,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Civil Hospital',
-                            style: kBodyText.copyWith(color: Colors.green),
-                          ),
-                        ],
-                      ),
-                      //
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on,
-                            color: Colors.green,
-                            size: 30,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Peshawar',
-                            style: kBodyText.copyWith(color: Colors.green),
-                          ),
-                        ],
-                      ),
-                      //
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.format_bold_rounded,
-                            color: Colors.green,
-                            size: 30,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            '3',
-                            style: kBodyText.copyWith(color: Colors.green),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.call,
-                      color: Colors.white,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  //calculate age
+  calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    print('This is the Age of======= $age');
+    return age;
   }
 }

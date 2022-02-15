@@ -74,7 +74,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                   ),
                   Text(
                     onboardingContents[index].title,
-                    style: kTitle,
+                    // style: kTitle,
                     textAlign: TextAlign.center,
                   ),
                   // SizedBox(height: sizeV * 5),

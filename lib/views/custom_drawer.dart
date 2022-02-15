@@ -1,102 +1,164 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:plasma_donor_app2/views/profile_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _auth = FirebaseAuth.instance;
     return Drawer(
       // color: Colors.green,
       child: ListView(
         children: [
-          ListTile(
-            title: Text('Profile'),
-            subtitle: Text('03085401482'),
-            leading: Icon(
-              Icons.person,
-              size: 40,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => ProfileScreen()));
+            },
+            child: ListTile(
+              title: Text('Profile'),
+              subtitle: Text(_auth.currentUser!.phoneNumber.toString()),
+              leading: Icon(
+                Icons.person,
+                size: 40,
+                color: Colors.green,
+              ),
             ),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.home,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('HomeScreen');
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.home,
+                color: Colors.green,
+              ),
+              title: Text('Home'),
             ),
-            title: Text('Home'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.search,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('PlasmaDonors');
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.search,
+                color: Colors.green,
+              ),
+              title: Text('Plasma Donors'),
             ),
-            title: Text('Plasma Donors'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.bloodtype,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('PlasmaRequestScreen');
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.bloodtype,
+                color: Colors.green,
+              ),
+              title: Text('Plasma Requests'),
             ),
-            title: Text('Plasma Requests'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.person_add,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('AddDonorScreen');
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.person_add,
+                color: Colors.green,
+              ),
+              title: Text('Add Donor'),
             ),
-            title: Text('Add Donor'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.add_moderator,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('PlasmaRequestScreen');
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.add_moderator,
+                color: Colors.green,
+              ),
+              title: Text('Add Plasma Requests'),
             ),
-            title: Text('Add Plasma Requests'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.alarm,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('ReminderScreen');
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.alarm,
+                color: Colors.green,
+              ),
+              title: Text('Reminder'),
             ),
-            title: Text('Reminder'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.health_and_safety,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('BloodBanksScreen');
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.health_and_safety,
+                color: Colors.green,
+              ),
+              title: Text('Blood Banks'),
             ),
-            title: Text('Blood Banks'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.call,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('ContactUsScreen');
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.call,
+                color: Colors.green,
+              ),
+              title: Text('Contact us'),
             ),
-            title: Text('Contact us'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.share,
-              color: Colors.green,
+          GestureDetector(
+            // onTap: () {
+            //   Navigator.of(context).pushReplacementNamed('HomeScreen');
+            // },
+            child: ListTile(
+              leading: Icon(
+                Icons.share,
+                color: Colors.green,
+              ),
+              title: Text('Share App'),
             ),
-            title: Text('Share App'),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(
-              Icons.logout_sharp,
-              color: Colors.green,
+          GestureDetector(
+            onTap: () async {
+              await _auth.signOut();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/', (route) => false);
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.logout_sharp,
+                color: Colors.green,
+              ),
+              title: Text('signout'),
             ),
-            title: Text('signout'),
           ),
           Divider(),
         ],
