@@ -255,7 +255,7 @@ class BloodBankCard extends StatelessWidget {
             ),
             //
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   height: 40,
@@ -280,19 +280,19 @@ class BloodBankCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.location_on,
-                    color: Colors.white,
-                  ),
-                )
+                // SizedBox(height: 20),
+                // Container(
+                //   height: 40,
+                //   width: 40,
+                //   decoration: BoxDecoration(
+                //     color: Colors.green,
+                //     shape: BoxShape.circle,
+                //   ),
+                //   child: Icon(
+                //     Icons.location_on,
+                //     color: Colors.white,
+                //   ),
+                // )
               ],
             ),
           ],

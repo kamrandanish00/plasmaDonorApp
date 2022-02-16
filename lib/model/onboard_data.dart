@@ -20,6 +20,6 @@ List<OnBoarding> onboardingContents = [
   OnBoarding(
       title: 'Sanitize Your Hands', image: 'assets/lottie/sanitizer.json'),
   OnBoarding(
-      title: 'Keey siz feet distance from each other.',
+      title: 'Keep six feet distance from each other.',
       image: 'assets/lottie/keep_distance.json')
 ];
