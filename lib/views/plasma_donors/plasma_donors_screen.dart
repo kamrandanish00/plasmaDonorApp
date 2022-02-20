@@ -7,10 +7,16 @@ import '../../size_configs.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class PlasmaDonorsScreen extends StatelessWidget {
+class PlasmaDonorsScreen extends StatefulWidget {
   PlasmaDonorsScreen({Key? key, this.bloodGroup}) : super(key: key);
   final String? bloodGroup;
 
+  @override
+  State<PlasmaDonorsScreen> createState() => _PlasmaDonorsScreenState();
+}
+
+class _PlasmaDonorsScreenState extends State<PlasmaDonorsScreen> {
+  String name = '';
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -47,6 +53,11 @@ class PlasmaDonorsScreen extends StatelessWidget {
                 hintText: 'Search by location',
                 border: InputBorder.none,
               ),
+              onChanged: (value) {
+                setState(() {
+                  name = value;
+                });
+              },
             ),
           ),
           //
@@ -57,15 +68,25 @@ class PlasmaDonorsScreen extends StatelessWidget {
               stream:
                   // FirebaseFirestore.instance.collection("Donors").snapshots(),
                   //
-                  FirebaseFirestore.instance
-                      .collection('Donors')
-                      .where('bloodGroup', isEqualTo: bloodGroup)
-                      .snapshots(),
+                  // FirebaseFirestore.instance
+                  //     .collection('Donors')
+                  //     .where('bloodGroup', isEqualTo: widget.bloodGroup)
+                  //     .snapshots(),
+                  (name != null && name != '')
+                      ? FirebaseFirestore.instance
+                          .collection('Donors')
+                          .where('city', isGreaterThanOrEqualTo: name)
+                          // .where('bloodGroup', isEqualTo: widget.bloodGroup)
+                          .snapshots()
+                      : FirebaseFirestore.instance
+                          .collection('Donors')
+                          .where('bloodGroup', isEqualTo: widget.bloodGroup)
+                          .snapshots(),
               builder: (_,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.hasData && snapshot.data != null) {
                   print("Total Documents: == ${snapshot.data?.docs.length}");
-                  print('This is BloodGroup ==== ${bloodGroup}');
+                  print('This is BloodGroup ==== ${widget.bloodGroup}');
                   if (snapshot.data!.docs.isNotEmpty) {
                     return ListView.separated(
                       itemCount: snapshot.data!.docs.length,
@@ -267,7 +288,7 @@ class PlasmaDonorsScreen extends StatelessWidget {
                   } else {
                     return Center(
                       child: Text(
-                          'Plasma requests for $bloodGroup are not available right now'),
+                          'Plasma requests for ${widget.bloodGroup} are not available right now'),
                     );
                   }
                 } else {
